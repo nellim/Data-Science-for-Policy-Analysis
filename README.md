@@ -7,7 +7,7 @@ Learning data science with R is difficult for many of our students. Most existin
 
 *R for Data Science* offers an different approach to teaching data science with R. The authors introduce R by teaching visualization skills using a package called ggplot at the beginning of the book. Our students enjoy learning to make attractive graphs with ggplot. In addition, the authors teach students how to use R within the framework of tidyverse (www.tidyverse.org), which offers a different approach to using R. 
 
-Our students have already taken one semester of a statistic course before they begin using these scripts. But these scripts only require intuitive knowledge of mathematical statistics or econometrics. We do, however, assume that the students have limited familiarity with R and R-studio. Policy analysts who are not familiar with R can learn its basics using Script_0.R and Introduction_to_R.pdf in this repository.
+Our students have already taken one semester of a statistic course before they begin using these scripts. But these scripts only require intuitive knowledge of mathematical statistics or econometrics. We do, however, assume that the students have limited familiarity with R and R-studio. Policy analysts who are not familiar with R can learn its basics using Script_0.R and Introduction_to_R.pdf in this repository. In addition, we also created two instructional videos to introduce basics of R. 
 
 ### Each script introduces specific skills, packages, and data sources
 

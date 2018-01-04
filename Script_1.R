@@ -316,6 +316,88 @@ employee_salaries <- read_csv("employee_salaries.csv")
 
 # 6. What is the job title of the highest paid city employee with overtime?
 
+
+##---------
+## Answers:
+##---------
+
+# Before we start analyzing the data, we should examine it
+# look at the data; make sure you loaded tidyverse
+# How many of these variables are numeric? 
+# Which ones are characters? 
+glimpse(employee_salaries)
+View(employee_salaries)
+# Do we have missing data?
+sum(is.na(employee_salaries$annual_salary))
+
+# Advanced example
+# You want to check missing data for all the variables in the data
+na_count <-sapply(employee_salaries, function(y) sum(length(which(is.na(y)))))
+(na_count <- data.frame(na_count))
+# Note that there are 12 missing data for "title" or "annual_salary"
+
+# 1. How many city employees in the data?
+# Base R
+length(employee_salaries$objectid)
+
+# with pipe and tidyverse
+employee_salaries %>% summarise(Count = n())
+
+# 2. How many employees the city of Philadelphia has in 2017?
+# Do you notice that the data is quarterly for each calendar year?
+# This means if you are not careful, you will be counting the same
+# people three times in 2017
+# Base R
+table(employee_salaries$calendar_year,employee_salaries$quarter)
+# the correct answer is: 31833
+
+# with pipe and tidyverse
+employee_salaries %>% 
+  group_by(calendar_year, quarter) %>% 
+  summarise(Count = n())
+
+# 3. What is the highest annual salary of a city employee without overtime?
+# Base R
+max(employee_salaries$annual_salary, na.rm = TRUE)
+
+# with pipe and tidyverse
+employee_salaries %>% 
+  summarise(max(annual_salary, na.rm = TRUE))
+
+# 4. What is the highest salary of a city employee including overtime?
+# By computing answer to Question #3, we know that there is an employee
+# with missing annual salary
+
+# Check the observation with missing annual_salary
+which(is.na(employee_salaries$annual_salary))
+
+# Confirm the fact that row number (134439) has missing value for annual salary
+data.frame(employee_salaries[134439,])
+
+# Replace missing value "NA" with 0
+employee_salaries$annual_salary[is.na(employee_salaries$annual_salary)] <- 0
+
+# Create a new variable total_salary
+# Base R
+employee_salaries$total_salary <- employee_salaries$annual_salary + employee_salaries$ytd_overtime_gross
+
+# With pipe and tidyverse
+employee_salaries <- employee_salaries %>% 
+  mutate(total_salary = annual_salary + ytd_overtime_gross)
+
+# answer the question
+max(employee_salaries$total_salary)
+
+# 5. What is the job title of the highest paid city employee without overtime?
+employee_salaries$title[employee_salaries$annual_salary==max(employee_salaries$annual_salary)]
+
+unique(employee_salaries$title[employee_salaries$annual_salary==max(employee_salaries$annual_salary)])
+
+# 6. What is the job title of the highest paid city employee with overtime?
+employee_salaries$title[employee_salaries$total_salary==max(employee_salaries$total_salary)]
+
+unique(employee_salaries$title[employee_salaries$total_salary==max(employee_salaries$total_salary)])
+
 ##----------
 ## Additional practice
 ##----------

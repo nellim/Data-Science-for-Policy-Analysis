@@ -121,11 +121,100 @@ $(document).ready(function () {
 </div>
 
 
-<div id="data-science-for-policy-analysis" class="section level1">
-<h1>Data Science for Policy Analysis</h1>
-<p>Policy analysts face unique challenges at their work. They need to transform data that were gathered or generated for a variety of administrative purposes into useful information for the policy makers. They also need to uncover hidden structure of the data they have transformed and visualize their findings to communicate as well as persuade stakeholders to support particular policies or programs.</p>
-<p>This repository contains a series of lessons designed to introduce essential elements of data science to policy analysts. We have used these lessons to teach Master of Public Administration students at Fels Institute of Government at University of Pennsylvania. The students have taken one semester of statistic course before they begin these lessons. But these lessons do not require deep knowledge of mathematical statistics or econometrics. We do assume that the students have limited familiarity with R and R-studio.</p>
-<p>The primary textbook for the course is R for Data Science by Garrett Grolemund and Hadley Wickham at <a href="http://r4ds.had.co.nz/" class="uri">http://r4ds.had.co.nz/</a>. Hence, these lessons teach students how to use R within the framework of tidyverse. The official resource for tidyverse is www.tidyverse.org.</p>
+<div id="data-science-for-policy-analysis-an-introduction-with-r" class="section level1">
+<h1>Data Science for Policy Analysis: an Introduction with R</h1>
+<p>Policy analysts face unique challenges. They need to transform data that were gathered or generated for administrative purposes into useful information for the decision makers. In this transformation, they often combine adminstrative data with a variety of data sources including national surveys like the American Community Surveys (ACS) or the Current Population Surveys (CPS). To accomplish their objective, they need to uncover hidden structure of the data and visualize their findings to communicate as well as persuade stakeholders to support particular policies or programs.</p>
+<p>To overcome these challenges, policy analysts need to master specific analytical skills. This repository contains a set of R scripts designed to introduce essential elements of data science to policy analysts. We have used these scripts to teach Master of Public Administration (MPA) students at Fels Institute of Government at University of Pennsylvania. These scripts are based on <em>R for Data Science</em> (<a href="http://r4ds.had.co.nz/" class="uri">http://r4ds.had.co.nz/</a>) by Garrett Grolemund and Hadley Wickham. But we significantly alter the order of skills being introduced to the students and replace data that are more relevant to policy analysts.</p>
+<p>Learning data science with R is difficult for many of our students. Most existing textbooks on the subject are written by data scientists with very different background and experience. For instance, most textbooks on the subject begin with a chapter introducing vectors and matrices, yet the most common form of data objects policy analysts have to work with is data frame. Moreover, students are expected to persevere for few more chapters before they learn a skill that they can use to create something interesting.</p>
+<p><em>R for Data Science</em> offers an different approach to teaching data science with R. The authors introduce R by teaching visualization skills using a package called ggplot at the beginning of the book. Our students enjoy learning to make attractive graphs with ggplot. In addition, the authors teach students how to use R within the framework of tidyverse (www.tidyverse.org), which offers a different approach to using R.</p>
+<p>Our students have taken one semester of statistic course before they begin using these scripts. But these scripts only require intuitive knowledge of mathematical statistics or econometrics. We do, however, assume that the students have limited familiarity with R and R-studio. Policy analysts who are not familiar with R can learn its basics using Script_0.R and Introduction_to_R.pdf in this repository.</p>
+<div id="each-script-introduces-specific-skills-packages-and-data-sources" class="section level3">
+<h3>Each script introduces specific skills, packages, and data sources</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Script #</th>
+<th>Skills</th>
+<th>Packages</th>
+<th>Data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Script 0</td>
+<td>Basics of R</td>
+<td>Base-R</td>
+<td>American Community Survey</td>
+</tr>
+<tr class="even">
+<td>Script 1</td>
+<td>Style, work flow</td>
+<td>tidyverse, magrittr</td>
+<td>Philly city salaries</td>
+</tr>
+<tr class="odd">
+<td>Script 2</td>
+<td>Visualization, EDA</td>
+<td>ggplot2</td>
+<td>mpg</td>
+</tr>
+<tr class="even">
+<td>Script 3</td>
+<td>Visualization, EDA</td>
+<td>ggplot2</td>
+<td>College majors, CPS 2017</td>
+</tr>
+<tr class="odd">
+<td>Script 4</td>
+<td>Data transformation</td>
+<td>tidyverse, dplyr</td>
+<td>flights</td>
+</tr>
+<tr class="even">
+<td>Script 5</td>
+<td>Data transformation</td>
+<td>tidyverse, dplyr</td>
+<td>Philly city budget</td>
+</tr>
+<tr class="odd">
+<td>Script 6</td>
+<td>EDA, crosstab</td>
+<td>ggplot2, gmodels</td>
+<td>General Social Survey</td>
+</tr>
+<tr class="even">
+<td>Script 7</td>
+<td>Categorical data</td>
+<td>forcats, vcd</td>
+<td>GSS</td>
+</tr>
+<tr class="odd">
+<td>Script 8</td>
+<td>Model your data</td>
+<td>Base-R, gam</td>
+<td>ACS</td>
+</tr>
+<tr class="even">
+<td>Script 9</td>
+<td>More models</td>
+<td>gam, glm</td>
+<td>ACS</td>
+</tr>
+<tr class="odd">
+<td>Script 10</td>
+<td>Maps</td>
+<td>ggmap</td>
+<td>Census data</td>
+</tr>
+<tr class="even">
+<td>Script 11</td>
+<td>Interactive documents</td>
+<td>markdown</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 
 

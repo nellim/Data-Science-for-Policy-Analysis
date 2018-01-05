@@ -5,6 +5,14 @@
 ##   1. Learn to wrangle your data
 ##----------------------------------------------------
 
+##-----------
+## Packages
+##-----------
+library(nycflights13)
+library(tidyverse) # load tidyverse that includes dplyr
+library(readr)
+library(ggplot2)
+
 ##---------------------
 ## Data transformation 
 ##---------------------
@@ -14,14 +22,10 @@
 
 # We will use the dplyr package to manage our data
 
-library(nycflights13)
 # Flights that departed from New York City in 2013. 
 # Source: US [Bureau of Transportation Statistics]
 # (http://www.transtats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0), 
 ?flights
-
-# load tidyverse that includes dplyr
-library(tidyverse)
 
 ###-------------
 ### Discussion
@@ -190,13 +194,12 @@ is.na(x)
 ##----------
 
 # import the data
-library(readr)
 # https://cran.r-project.org/web/packages/readr/README.html
 
 employee_salaries <- read_csv("employee_salaries.csv")
 
 # 1. Select City employees working in Mayor's office?
-filter(employee_salaries, department=="MAYOR'S OFFICE")
+employee_salaries %>%  filter(department=="MAYOR'S OFFICE")
 
 # 2. Select City employees who earned more than $250,000 in 2017?
 #     Did you notice anything unusual about the result?
@@ -387,7 +390,6 @@ employee_salaries <- mutate(employee_salaries,
                             total_salary = annual_salary + ytd_overtime_gross)
 
 # 2. Display the distribution of total_salary in 2017
-library(ggplot2)
 employee_salaries %>%
   filter(calendar_year == 2017 & quarter == 3) %>%
   ggplot(aes(x = total_salary)) + 

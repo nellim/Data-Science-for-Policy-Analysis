@@ -6,6 +6,13 @@
 ##   2. Learn to conduct EDA/descriptive analysis
 ##-------------------------------------------------
 
+##-----------
+## Packages
+##-----------
+library(ggplot2)
+library(tidyverse)
+
+
 # The most likely data analysis that you will do at your work is
 # exploratory data analysis, or EDA for short. 
 
@@ -34,8 +41,6 @@
 #    "cell", each variable in its own column, and each observation in its own row. 
 
 # We will use ggplot2 for most of our EDA work
-
-library(ggplot2)
 
 ###------------
 ### Discussion 
@@ -311,7 +316,6 @@ ggplot(data = mpg) +
 
 # you can enter the data and create a bar graph
 # this workflow is the same as what you will do in Excel
-library(tidyverse)
 demo <- tribble(
   ~a,      ~b,
   "bar_1", 20,

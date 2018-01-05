@@ -18,6 +18,35 @@
 # reduce errors in your codes and enhance your quality of life.
 # Error messages in R are known to be harmful to our mental health.
 
+##------------
+## Packages
+##------------
+
+# These are packages we will use in this script
+# It is a good habit to put all the packages listed at the front of the script
+
+# Here is the documentation for R packages:
+# https://www.rdocumentation.org/ 
+
+# Install packages: dplyr, nycfilights13, tidyverse
+# Note that you need to combine the names into a vector with c()
+install.packages(c("dplyr","nycflights13","tidyverse"))
+
+library(dplyr) # package that you will use to manage your data
+library(nycflights13) # a data set of flights coming and going from New York city
+library(tidyverse) # official package that creates a alternative "universe" for R users 
+
+# You can use a package __pacman__ to install and manage your packages
+pacman::p_load("readr")
+# <package_name>::<function_name>("<package_name>")
+
+# load the package
+library(readr)
+
+# The pipe, `%>%`, comes from the __magrittr__ package by Stefan Milton Bache. 
+library(magrittr)
+
+
 ###------------
 ### Discussion 
 ###------------
@@ -97,10 +126,11 @@ x
 # can only contain letters, numbers, `_` and `.`. 
 # Use __snake_case__ where you separate lowercase words with `_`. 
 
-i_use_snake_case
-otherPeopleUseCamelCase
-some.people.use.periods
-And_aFew.People_RENOUNCEconvention
+# Here are examples:
+# i_use_snake_case
+# otherPeopleUseCamelCase
+# some.people.use.periods
+# And_aFew.People_RENOUNCEconvention
 
 this_is_a_really_long_name <- 2.5
 
@@ -138,18 +168,6 @@ y
 
 # The most important keyboard shortcuts: Cmd/Ctrl + Enter. 
 # This executes the current R expression in the console. 
-
-# Start your script with the packages that you need. 
-# Here is the documentation for R packages:
-# https://www.rdocumentation.org/ 
-
-# Install packages: dplyr, nycfilights13, tidyverse
-# Note that you need to combine the names into a vector with c()
-install.packages(c("dplyr","nycflights13","tidyverse"))
-
-library(dplyr) # package that you will use to manage your data
-library(nycflights13) # a data set of flights coming and going from New York city
-library(tidyverse) # official package that creates a alternative "universe" for R users 
 
 ##---------------------
 ## Workflow: projects
@@ -247,10 +265,6 @@ getwd()
 
 # Pipes are a tool for expressing a sequence of multiple operations. 
 
-# The pipe, `%>%`, comes from the __magrittr__ package by Stefan Milton Bache. 
-
-library(magrittr)
-
 # Introduction to magrittr
 # https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html
 
@@ -274,13 +288,8 @@ not_cancelled %>%
 ##-------------------------------------------------------
 ## Import data from Excel worksheet saved as cvs format
 ##-------------------------------------------------------
-# install a package __readr__
-# You can use a package __pacman__ to install and manage your packages
-pacman::p_load("readr")
-# <package_name>::<function_name>("<package_name>")
 
-# load the package
-library(readr)
+# We will use __readr__ to import data 
 # https://cran.r-project.org/web/packages/readr/README.html
 
 ##---------
@@ -398,9 +407,9 @@ employee_salaries$title[employee_salaries$total_salary==max(employee_salaries$to
 
 unique(employee_salaries$title[employee_salaries$total_salary==max(employee_salaries$total_salary)])
 
-##----------
+##---------------------
 ## Additional practice
-##----------
+##---------------------
 
 # 1. Go to https://github.com/fivethirtyeight/data and explore the data sets.
 # 2. Pick a data set that you want to explore.

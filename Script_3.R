@@ -6,6 +6,16 @@
 ##   2. Learn to conduct EDA/descriptive analysis
 ##-------------------------------------------------
 
+##-----------
+## Packages
+##-----------
+library(tidyverse)
+library(readr)
+library(ggplot2)
+install.packages("ggthemes") # Install 
+library(ggthemes) 
+
+
 ###-------------
 ### Discussion
 ###-------------
@@ -16,11 +26,7 @@
 ### Articles that use the data: https://fivethirtyeight.com/tag/college-majors/
 
 
-library(tidyverse)
-
-library(readr)
 college_major <- read_csv("recent-grads.csv")
-
 str(college_major)
 View(college_major)
 
@@ -31,15 +37,14 @@ View(college_major)
 # Univariate distribution of a categorical variable: Major_category
 # This will be our main input/independent variable for this analysis
 
-library(ggplot2)
 ggplot(data = college_major) +
   geom_bar(mapping = aes(x = Major_category))
 
-###-------------
-### Discussion
-###-------------
+##-----------
+## Practice
+##-----------
 
-### How would you describe this graph?
+## How would you describe this graph?
 
 # It is difficult to read the labels on the x-axis
 # So we will "flip" the graph 
@@ -52,7 +57,6 @@ ggplot(data = college_major) +
 
 college_major %>% count(Major_category)
 
-
 # Univariate distribution of a numeric variable: Median
 # This will be our main output/dependent variable
 
@@ -63,7 +67,11 @@ college_major %>% count(Major_category)
 ggplot(data = college_major) +
   geom_histogram(mapping = aes(x = Median, binwidth = 0.5))
 
-# How would you describe this graph?
+##-----------
+## Practice
+##-----------
+
+## How would you describe this graph?
 
 # A histogram divides the x-axis into equally spaced bins and 
 # then uses the height of a bar to display the number of observations 
@@ -120,8 +128,7 @@ ggplot(data = college_major) +
 ## Practice
 ##-----------
 
-# what is that major?
-
+## what is that major?
 
 ##----------
 ## Answer
@@ -198,6 +205,15 @@ ggplot(data = mpg) +
     fun.y = median
   )
 
+# Another example using college major data
+
+ggplot(data = college_major) + 
+  stat_summary(
+    mapping = aes(x = Major_category, y = Median),
+    fun.ymin = min,
+    fun.ymax = max,
+    fun.y = median
+  )
 
 # Boxplot: boxplot is a type of visual shorthand for a distribution of values that is 
 # popular among statisticians. 
@@ -283,8 +299,6 @@ ggplot(data = mpg) +
 ## Answers
 ##----------
 
-library(tidyverse)
-
 # 1. Load the dataframe cps_2017_small.rds
 cps_data <- readRDS("cps_2017_small.rds")
 
@@ -331,3 +345,25 @@ ggplot(cps_data, aes(Wage, fill = Sex, colour = Sex)) +
 # 7. Do females receive similar returns on their educational investment?
 ggplot(data = cps_data) + 
   geom_smooth(mapping = aes(x = Yrs_Schooling, y = Wage, linetype = Sex))
+
+##--------
+## Bonus
+##--------
+
+ggplot(data = cps_data) + 
+  geom_smooth(mapping = aes(x = Yrs_Schooling, y = Wage, colour = Sex)) +
+  labs(
+    title = "Gender gap in wages increases with the level of education in 2017",
+    subtitle = "On average women earn less than men across all levels of education",
+    caption = "Source: Current Population Survey"
+  ) +
+  annotate("text", x=8, y=55000, label="Non-linear regression lines with standard errors") +
+  scale_x_continuous(name = "Education (Years of Schooling)", breaks=seq(0, 20, 2)) +
+  scale_y_continuous(name = "Wage", breaks=seq(0, 150000, 25000), labels = scales::dollar) +
+  scale_colour_manual(values = c(Male = "red", Female = "blue"), labels = c("Men", "Women")) +
+  theme(
+    panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                    colour = "white"), 
+    panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                    colour = "white")
+  )

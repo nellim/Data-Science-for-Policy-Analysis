@@ -4,6 +4,7 @@
 ## Learning objectives:
 ##   1. Learn to how to ggplot2
 ##   2. Learn to conduct EDA/descriptive analysis
+## Version: 01/06/2018
 ##-------------------------------------------------
 
 ##-----------
@@ -11,34 +12,41 @@
 ##-----------
 library(ggplot2)
 library(tidyverse)
-
+library(readr)
 
 # The most likely data analysis that you will do at your work is
-# exploratory data analysis, or EDA for short. 
+# exploratory data analysis (EDA). EDA is more art than science.
+# The deep understanding of mathematical statistics or econometric 
+# is not as important as intuitive and contextual knowledge about your data.
 
-# EDA is an iterative cycle. 
+# The application of EDA can start with a question from your boss about 
+# the data. Or you may generate questions from observing the data.
+# You will search for answers by visualising, transforming, and modelling your data.
+# As you learn more about the data, you will refine your questions 
+# and/or generate new questions. At the end, the objective of your effort is
+# to uncover a hidden structure of the data and communicate the findings to
+# the decision makers, internal and external stakeholders. 
 
-# You:
-# 1. Generate questions about your data.
-# 2. Search for answers by visualising, transforming, and modelling your data.
-# 3. Use what you learn to refine your questions and/or generate new questions.
+# Two questions usually guide your EDA:
+# 1. What type of variation occurs within your variables? Technically, this question
+# is about univarate distribution of the variables. 
+# 2. What type of covariation occurs between your variables? This question is about
+# bi- or multivarate associations among the variables. 
 
-# Two guiding questions for your EDA:
-
-# 1. What type of variation occurs within your variables?
-# 2. What type of covariation occurs between your variables?
-
-
-# Some definitions
-# 1. __variable__ is a quantity, quality, or property that you can measure. 
-# 2. A __value__ is the state of a variable when you measure it. The value of a
+# Some definitions for our discussion
+# 1. Variable     : a quantity, quality, or property that you can measure. 
+# 2. Value        : the state of a variable when you measure it. The value of a
 #    variable may change from measurement to measurement.
-# 3. An __observation__ is a set of measurements made under similar conditions.
+# 3. Observation  : a set of measurements made under similar conditions.
 #    An observation will contain several values, each associated with a different 
-# variable. I'll sometimes refer to an observation as a data point.
-# 4. __Tabular data__ is a set of values, each associated with a variable and 
-#    an observation. Tabular data is _tidy_ if each value is placed in its own
-#    "cell", each variable in its own column, and each observation in its own row. 
+#    variable. 
+# 4. Tabular data : a set of values, each associated with a variable and 
+#    an observation.  
+
+# Import data
+employee_salaries <- read_csv("employee_salaries.csv")
+# We will use "employee_salaries.csv" from Open Data Philly website.
+
 
 # We will use ggplot2 for most of our EDA work
 
@@ -64,222 +72,16 @@ library(tidyverse)
 ###------------------
 ### http://docs.ggplot2.org/current/
 ### This is how I learn to use ggplot: http://www.cookbook-r.com/Graphs/ 
-### The official book on ggplot2: http://ggplot2.org/book/
-### Another very good book: http://socviz.co/
-### download the cheatsheet for ggplot
+### The official book on ggplot2: http://ggplot2.org/book/.
+### Another very good book: http://socviz.co/.
+### Download the cheatsheet for ggplot.
 ###----------------------------------------------------
-
-
-###------------
-### Discussion 
-###------------
-
-### We will use a small data file that comes with ggplot2
-### mpg: Fuel economyh data from 1999 and 2008 for 38 popular models of car
-### Make a habit of looking at the data
-### You can download the latest version of this data: http://www.fueleconomy.gov/feg/download.shtml 
-
-
-# look at the data we will use to learn ggplot
-View(mpg)
-str(mpg)
-?mpg
-
-### Ask these questions when you are looking at the data
-### 1. How many observations?
-### 2. How many variables?
-### 3. How many categorical variables?
-### 4. How many continous/numeric variables?
-### 5. Which variables can be outcome variables?
-### 6. Which variables can be input variabeles?
-
-
-# Here is your first graph
-ggplot(data = mpg) + #always add the plus sign at the end of the line, not at the front
-  geom_point(mapping = aes(x = displ, y = hwy))
-
-### How can we describe the graph?
-
-# alternative
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + #always add the plus sign at the end of the line, not at the front
-  geom_point()
-
-###------------
-### Discussion 
-###------------
-
-### What are the differences between two ways that produce the same graph?
-
-### Why hwy is plotted on y-axis and displ on x-axis?
-### In general, how do you decide which variable should be on which axis?
-
-### Output : dependent variable : y-axis
-### Input : independent variable : x-axis
-
-##-----------
-## color
-##-----------
-
-ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy, color = class))
-
-# alternative
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) + 
-  geom_point(mapping = aes(color = class))
-
-ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
-
-# alternative
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point(color = "blue")
-
-
-###------------
-### Discussion 
-###------------
-
-###--------------------------------------------
-### general notes about what have learn so far
-###--------------------------------------------
-###                                                aesthetic variable to
-###                                                 property  map it to
-###                                                    |        |   
-### ggplot(mpg) + geom_point(aes(x = displ, y = hwy, color = class))
-### ggplot(mpg) + geom_point(aes(x = displ, y = hwy, size = class))
-### ggplot(mpg) + geom_point(aes(x = displ, y = hwy, shape = class))
-### ggplot(mpg) + geom_point(aes(x = displ, y = hwy, alpha = class))
-
-#--------------- 
-# set vs. map
-#---------------
-ggplot(mpg) + geom_point(aes(x = displ, y = hwy, color = "green"))
-# note: Inside of aes(): ggplot2 treats input as value in the data
-#       space and maps it to a value in the visual space.
-ggplot(mpg) + geom_point(aes(x = displ, y = hwy), color = "green")
-# note: Outside of aes(): ggplot2 treats input as value in
-#       the visual space and sets the property to it.
-
-#-----------
-# facets
-#-----------
- 
-#
-# facet_grid() - 2D grid, rows ~ cols, . for no split
-# facet_wrap() - 1D ribbon wrapped into 2D
-#
- 
-ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy)) + 
-  facet_wrap(~ class, nrow = 2)
-
-
-##-------
-## geom
-##------
-
-###------------
-### Discussion 
-###------------
-
-ggplot(data = mpg) + 
-  geom_smooth(mapping = aes(x = displ, y = hwy))
-
-### How can we describe the graph? 
-### Anything strange about this graph?
-
-ggplot(data = mpg) + 
-  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))
-
-### How can we describe the graph? 
-### Anything strange about this graph?
-
-ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy)) +
-  geom_smooth(mapping = aes(x = displ, y = hwy))
-
-### How can we describe the graph? 
-### Anything strange about this graph?
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point(mapping = aes(color = class)) + 
-  geom_smooth()
-
-### How can we describe the graph? 
-### Anything strange about this graph?
-
-###------------
-### Discussion 
-###------------
-
-###-------------------------------- 
-### note about global and local
-###--------------------------------
-###
-### Mappings (and data) that appear in ggplot() will apply globally to every layer
-### ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
-###  geom_point() +
-###  geom_smooth()
-###
-### Mappings (and data) that appear in a geom_ function will add to or override the
-### global mappings for that layer only
-### ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
-###  geom_point(mapping = aes(color = drv)) +
-###  geom_smooth()
-###
-### Automatically draws a single line for each group implied by color.
-### This occurs for other "monolithic" geoms as well.
-### ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
-###  geom_point(mapping = aes(color = drv)) +
-###  geom_smooth(mapping = aes(color = drv), se = FALSE)
-
-##-----------------------
-## something fun
-##-----------------------
-
-# execute this and what do you see?
-ggplot(data = mpg,
-       mapping = aes(x = cty, y = hwy, color = drv)) +
-  geom_density_2d(color = "white") +
-  geom_point()
-
-##--------------------------------------------
-## adding a few more options for geom_smooth
-##--------------------------------------------
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point(mapping = aes(color = class)) + 
-  geom_smooth(method = "gam", formula = y ~ s(x))
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point(mapping = aes(color = class)) + 
-  geom_smooth(method = "lm")
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point(mapping = aes(color = class)) + 
-  geom_smooth(method = "lm") +
-  geom_smooth(method = "gam", formula = y ~ s(x))
-
-### lm is a Orginary Least Square regression
-### How can we describe the graph? 
-### Anything strange about this graph?
-### Compare this graph with previous graph
-### What do you see?
-
-##----------------------
-## update on template
-##----------------------
-
-# ggplot(data = <DATA>) +
-#   <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>),
-#                   stat = <STAT>) +
-#   <FACET_FUNCTION>
 
 ##-------------------------------------
 ## Graphical display of distributions 
 ##-------------------------------------
 
-# Your data analysis often begins with examining the distribution of your variables
+# Your data analysis often begins with examining the distribution of your variables.
 
 # Variation
 
@@ -291,7 +93,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
 # the variable's values.
 
 ##-----------------------------
-## Categorical vs. Continuous 
+## Categorical or Continuous 
 ##-----------------------------
 
 # How you visualise the distribution of a variable will depend on whether the variable
@@ -302,37 +104,57 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
 # To examine the distribution of a categorical variable, use a bar chart:
 
 ##--------------------------------------
-## Bar graphs for categorical variables
+## Variation of categorical variables
 ##--------------------------------------
 
 # looking at the distribution of a categorical variable
 # we will use geom_bar to crate a bar graph
-ggplot(data = mpg) + 
-  geom_bar(mapping = aes(x = class))
+ggplot(data = employee_salaries) + 
+  geom_bar(mapping = aes(x = calendar_year))
 
-# alternative 
-ggplot(data = mpg) + 
-  stat_count(mapping = aes(x = class))
+# Above codes contain two parts:
+# First: you tell ggplot that your data is: employee_salaries
+p1 <- ggplot(data = employee_salaries)
+# Second: you tell ggplot to add geom_bar that map the variable: calendar_year.
+p1 + geom_bar(mapping = aes(x = calendar_year))
 
-# you can enter the data and create a bar graph
+# Let's look at geom_bar for more details:
+?geom_bar
+
+# Notice y-axis? It is strangely formatted. 
+# We will fix it by changing calendar_year as a factor variable.
+
+ggplot(data = employee_salaries) + 
+  geom_bar(mapping = aes(x = as.factor(calendar_year)))
+
+# Notice that you can transform the variable within ggplot. 
+
+# Alternative approach: 
+ggplot(data = employee_salaries) + 
+  stat_count(mapping = aes(x = as.factor(calendar_year)))
+
+# You can enter the data and create a bar graph
 # this workflow is the same as what you will do in Excel
 demo <- tribble(
-  ~a,      ~b,
-  "bar_1", 20,
-  "bar_2", 30,
-  "bar_3", 40
+  ~Department,      ~Employees,
+  "Finance", 20,
+  "IT", 10,
+  "HR", 30
 )
 
 ggplot(data = demo) +
-  geom_bar(mapping = aes(x = a, y = b), stat = "identity")
+  geom_bar(mapping = aes(x = Department, y = Employees), stat = "identity")
 
-ggplot(data = mpg) + 
-  geom_bar(mapping = aes(x = class))
+# Can you create a bar graph that show % of departments in the data?
+ggplot(data = employee_salaries) + 
+  geom_bar(mapping = aes(x = as.factor(calendar_year), y = ..prop.., group = 1))
+# Note the option group = 1.
 
-# can you create a bar graph that show % of SUVs in the mpg data?
-ggplot(data = mpg) + 
-  geom_bar(mapping = aes(x = class, y = ..prop.., group = 1))
-# note the option __group = 1__
+##----------
+## Practice
+##----------
+
+## 1. Why do we want to show % instead of counts? 
 
 ###------------
 ### Discussion 
@@ -340,26 +162,211 @@ ggplot(data = mpg) +
 
 ### you can compute statistics inside ggplot, but it is not a good idea
 
+###-------------
+### Discussion
+###-------------
+
+### One more data set for us to explore. 
+### This data is used to write an article fivethirtyeight
+### https://github.com/fivethirtyeight/data/blob/master/college-majors/recent-grads.csv
+### Articles that use the data: https://fivethirtyeight.com/tag/college-majors/
+
+
+college_major <- read_csv("recent-grads.csv")
+str(college_major)
+View(college_major)
+
+# As before we will concentrate on variation of a categorical variable: Major_category.
+
+##-----------
+## Practice 
+##-----------
+
+## 1. Can you produce a bar graph to display the variation of Major_category?
+
+## 2. How would you describe this graph?
+
+##----------
+## Answers
+##----------
+
+ggplot(data = college_major) +
+  geom_bar(mapping = aes(x = Major_category))
+
+# It is difficult to read the labels on the x-axis
+# So we will "flip" the graph 
+ggplot(data = college_major) +
+  geom_bar(mapping = aes(x = Major_category)) +
+  coord_flip()
+
+# Let's look at more about coord_flip().
+?coord_flip
+
+# The height of the bars displays how many observations occurred with each x value. 
+# You can compute these values manually with `dplyr::count()`:
+
+college_major %>% dplyr::count(Major_category) 
+
+# Note that we are using a function from a package, dplyr, without explicitly loading dplyr. 
 
 ##--------------------------------------
-## Density plots for numeric variables
+## Variation of numeric variables
 ##--------------------------------------
 
-# histograms
-ggplot(data = mpg) +
-  geom_histogram(mapping = aes(x = hwy), binwidth = 0.5)
+# When we want to examine the variation/distribution of a numeric variable,
+# we will use a histogram. 
 
-ggplot(data = mpg) +
-  geom_histogram(mapping = aes(x = hwy), binwidth = 1.0)
+##--------------------
+## Bonus information
+##--------------------
 
-# Note how the graph changes with __binwidth__
+# When data file is large, it can take time to display the variations of numeric variables.
+# To speed up our work we can sample the data for the 3rd quarter of 2017
+employee_salaries_2017 <- employee_salaries %>% 
+  filter(calendar_year == 2017 & quarter ==3) %>% # You will learn more about filter very soon.
+  group_by(department) %>% # We are grouping the data by departments.
+  # We will sample from each department so that we will maintain the structure of the data.
+  # This is technically called Stratified Sampling. In this case, strata are departments.
+  sample_frac(.5) # sample half of the workforce
 
-ggplot(data = mpg) +
-  geom_histogram(mapping = aes(x = hwy), binwidth = 2.0)
 
-# density plots
-ggplot(mpg) +
-  geom_density(mapping = aes(hwy))
+
+# Histograms
+ggplot(data = employee_salaries_2017) +
+  geom_histogram(mapping = aes(x = annual_salary))
+
+# Let's review the details of geom_histogram
+?geom_histogram
+
+ggplot(data = employee_salaries_2017) +
+  geom_histogram(mapping = aes(x = annual_salary), binwidth = 5000)
+
+# A histogram divides the x-axis into equally spaced bins and 
+# then uses the height of a bar to display the number of observations 
+# that fall in each bin. 
+
+# You can set the width of the intervals in a histogram with the `binwidth` argument,
+# which is measured in the units of the `x` variable. 
+# You should always explore a variety of binwidths when working with histograms, 
+# as different binwidths can reveal different patterns. 
+
+# Scale of x-axi is in scientific notations. We can fix that in a variety of ways.
+ggplot(data = employee_salaries_2017) +
+  geom_histogram(mapping = aes(x = annual_salary)) +
+  scale_x_continuous(labels = scales::dollar)
+
+# Let's examine the option:
+# http://ggplot2.tidyverse.org/reference/scale_continuous.html.
+
+
+##-----------
+## Practice
+##-----------
+
+# Use college_major data. 
+# Examine a univariate distribution of a numeric variable: Median
+
+## 1. Can you produce a graph to display the variation of Median?
+
+## 2. How would you describe this graph?
+
+##----------
+## Answers
+##----------
+
+ggplot(data = college_major) +
+  geom_histogram(mapping = aes(x = Median, binwidth = 0.5))
+
+# We can make it little more informative by adding more information
+# We know that Median is the median salary of college majors
+# We will use a package __scales__
+ggplot(data = college_major) +
+  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
+  scale_x_continuous(labels = scales::dollar)
+
+# You can compute this by hand by combining `dplyr::count()` 
+# and `ggplot2::cut_width()`:
+
+college_major %>% 
+  count(cut_width(Median, 0.5))
+
+# Now that you can visualise variation, what should you look for in your plots? 
+# And what type of follow-up questions should you ask? 
+
+# Typical values
+
+# 1. Which values are the most common? Why?
+# 2. Which values are rare? Why? Does that match your expectations?
+# 3. Can you see any unusual patterns? What might explain them?
+
+# Clusters of similar values suggest that subgroups exist in your data. To understand the subgroups, ask:
+# 1. How are the observations within each cluster similar to each other?
+# 2. How are the observations in separate clusters different from each other?
+# 3. How can you explain or describe the clusters?
+# 4. Why might the appearance of clusters be misleading?
+
+## Unusual values
+
+# Outliers are observations that are unusual; 
+# data points that don't seem to fit the pattern. 
+# Sometimes outliers are data entry errors; other times outliers suggest 
+# important new science. When you have a lot of data, outliers are 
+# sometimes difficult to see in a histogram.  
+
+ggplot(data = college_major) +
+  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
+  scale_x_continuous(labels = scales::dollar)
+
+# Note that there is one college major that paid more than $100,000
+
+##-----------
+## Practice
+##-----------
+
+## what is that major?
+
+##----------
+## Answer
+##---------
+(data.frame(college_major$Major[college_major$Median > 100000]))
+
+
+# You can "zoom" into any part of the distribution by "filtering" the data
+low_wage_major <- college_major %>% 
+  filter(Median < 40000)
+
+ggplot(data = low_wage_major) +
+  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
+  scale_x_continuous(labels = scales::dollar)
+
+# It's good practice to repeat your analysis with and without the outliers. 
+# If they have minimal effect on the results, and you can't figure out why they're there, 
+# it's reasonable to replace them with missing values, and move on. 
+# However, if they have a substantial effect on your results, you shouldn't drop them 
+# without justification. 
+# You'll need to figure out what caused them (e.g. a data entry error) and 
+# disclose that you removed them in your write-up.
+
+## Missing values
+
+# You can replace the unusual values with missing values.
+# The easiest way to do this is to use `mutate()` to replace the variable
+# with a modified copy. You can use the `ifelse()` function to replace
+# unusual values with `NA`:
+
+college_major_no_outlier <- college_major %>% 
+  mutate(Median = ifelse(Median > 100000, NA, Median)) # You will learn more about mutate soon.
+
+# ifelse() has three arguments. 
+#  First argument: `test` should be a logical vector. 
+#  The result will contain the value of the second argument, `yes`, 
+#  when `test` is `TRUE`, and the value of the third argument, `no`, 
+#  when it is false.
+
+ggplot(data = college_major_no_outlier) +
+  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
+  scale_x_continuous(labels = scales::dollar)
+
 
 ##----------
 ## Practice
@@ -372,5 +379,4 @@ ggplot(mpg) +
 # 5. Explore the data by using ggplot.
 #    a. Visualize the distribution of a categorical variable
 #    b. Visualize the distribution of a numeric variable.
-#    c. Visualize the covariation of two numeric variables.
 

@@ -5,6 +5,7 @@
 ##   1. Review basics of R
 ##   2. workflow of an analysis
 ##   3. Learn to how to "pipe"
+## Version: 01/06/2018
 ##------------------------------------------
 
 # You will learn to analyze data using R in this course. 
@@ -16,35 +17,36 @@
 
 # So this is a good time to develop good programming habits. These habits will 
 # reduce errors in your codes and enhance your quality of life.
-# Error messages in R are known to be harmful to our mental health.
+# Error messages in R are known to be harmful to our mental health,
+# because they are written by people who are native R speakers.
+# Compared to them, R will always be a second language for us, since we are 
+# are analysts. Our native language is public adminstration and public policy.
 
 ##------------
 ## Packages
 ##------------
 
-# These are packages we will use in this script
-# It is a good habit to put all the packages listed at the front of the script
+# It is a good habit to put all the packages listed at the front of the script.
+# These are packages we will use in this script.
 
 # Here is the documentation for R packages:
 # https://www.rdocumentation.org/ 
 
-# Install packages: dplyr, nycfilights13, tidyverse
-# Note that you need to combine the names into a vector with c()
-install.packages(c("dplyr","nycflights13","tidyverse"))
+# Install packages: dplyr, nycfilights13, tidyverse, readr, and magrittr.
+# Note that you need to combine the names into a vector with c().
+install.packages(c("dplyr","nycflights13","tidyverse", "readr", "magrittr"))
 
-library(dplyr) # package that you will use to manage your data
-library(nycflights13) # a data set of flights coming and going from New York city
-library(tidyverse) # official package that creates a alternative "universe" for R users 
+# Load the packages.
+library(dplyr) # A package that you will use to manage your data.
+library(nycflights13) # A data set of flights coming and going from New York city.
+library(tidyverse) # Official package that creates a alternative "universe" for R users. 
+library(readr) # Import data files that are saved in other formts like Excel.
+library(magrittr) # The pipe, `%>%`, comes from the magrittr package by Stefan Milton Bache. 
 
-# You can use a package __pacman__ to install and manage your packages
-pacman::p_load("readr")
+
+# You can use a package pacman to install and manage your packages.
+# pacman::p_load("readr").
 # <package_name>::<function_name>("<package_name>")
-
-# load the package
-library(readr)
-
-# The pipe, `%>%`, comes from the __magrittr__ package by Stefan Milton Bache. 
-library(magrittr)
 
 
 ###------------
@@ -52,13 +54,13 @@ library(magrittr)
 ###------------
 
 ### Here is a style guide that makes your codes easier to understand 
-### and debug: http://style.tidyverse.org/ 
+### and debug: http://style.tidyverse.org/. 
 ### Let's review them.
 
 # In fact, there are two packages that help you apply the style guide:
-# 1. __styler__ allows you to interactively restyle selected text, files, 
+# 1. styler: allows you to interactively restyle selected text, files, 
 #    or entire projects.
-# 2. __lintr__ performs automated checks to confirm that your conform to 
+# 2. lintr: performs automated checks to confirm that your conform to 
 # the style guide. 
 
 ##-------------------------
@@ -82,15 +84,16 @@ library(magrittr)
 # making practical decisions based on them, at any cost." 
 # https://www.quora.com/What-does-the-phrase-ruthlessly-pragmatic-mean 
 
-# The official website for tidyvese is: https://www.tidyverse.org/ 
+# The official website for tidyvese is: https://www.tidyverse.org/. 
 
 ##-------------------
 ## Review of basics
 ##-------------------
 
 # Here are a few basics of R that you already know. 
-# But we will review them to make sure that we are on the same page
-# You can use R as a calculator
+# But we will review them to make sure that we are on the same page.
+
+# You can use R as a calculator.
 
 1 / 200 * 30
 (59 + 73 + 2) / 3
@@ -98,9 +101,9 @@ sin(pi / 2)
 
 # You also know that R is an "object oriented" language. 
 # You can create new objects with `<-`
-# Structure of the code: <object_name> <- <value>
+# Structure of the code: <object_name> <- <value>.
 # Read that code as : "<object name> gets <value>." 
-# Keyboard shortcut in R studio for <- : `Alt + (minus sign)`  
+# Keyboard shortcut in R studio for <- : `Alt + (minus sign)`.  
 
 x <- 3 * 4
 
@@ -114,12 +117,12 @@ x
 ### Here is a collection of cheatsheets:
 ### https://www.rstudio.com/resources/cheatsheets/ 
 
-### Download the cheatsheet for Base-R
-### Download the cheatsheet for rstudio-ide 
+### Download the cheatsheet for Base-R.
+### Download the cheatsheet for rstudio-ide. 
 
 ##------------------------------------------
 ## Everything starts with a name: 
-## Use __snake_case__ for descriptive names
+## Use snake_case for descriptive names.
 ##------------------------------------------
 
 # Object names must start with a letter, and 
@@ -143,7 +146,8 @@ this_is_a_really_long_name <- 2.5
 ##--------------------
 
 # R has a large collection of built-in functions that you can use (or "call") 
-# like this: function_name(arg1 = val1, arg2 = val2, ...)
+# like this: function_name(arg1 = val1, arg2 = val2, ...).
+# Functions allow you to do things in R.
 
 seq(1, 10)
 y <- seq(1, 10, length.out = 5)
@@ -190,11 +194,11 @@ y
 ## New way to organize your work
 ##---------------------------------
 
-# You know the importance of the __working directory__. 
+# You already know the importance of the working directory. 
 # This is where R looks for files.
-# RStudio shows your current working directory at the top of the console:
+# RStudio shows your current working directory at the top of the console window.
 
-# And you can print this out in R code by running `getwd()`:
+# You can also print this out in R code by running `getwd()`:
 
 getwd()
 
@@ -211,9 +215,9 @@ getwd()
 ## Make your work self-contained and portable
 ##---------------------------------------------
 
-# Don't set your working directory using `setwd()`
+# Don't set your working directory using `setwd()`.
 # A blog describing the virtue of project-oriented workflow
-# https://www.tidyverse.org/articles/2017/12/workflow-vs-script/
+# https://www.tidyverse.org/articles/2017/12/workflow-vs-script/.
 
 # The author of the blog wrote:
 # "The chance of the setwd() command having the desired effect -
@@ -231,7 +235,7 @@ getwd()
 ### Discussion 
 ###------------
 
-### R experts keep all the files associated with a project together
+### R experts keep all the files associated with a project together.
 
 ##-----------
 ## Practice
@@ -240,16 +244,16 @@ getwd()
 # 1. Create a directory; call it "Week1" using a file manager of your 
 #    operating system. 
 # 2. Put Script_1 and employee_salaries.csv into the directory
-#    into "Week1"
+#    into "Week1".
 
-# 3. Click File > New Project in R-studio
-# 4. Select the option: existing directory
+# 3. Click File > New Project in R-studio.
+# 4. Select the option: existing directory.
 
-# 5. Now you should have a project called: Week1 
+# 5. Now you should have a project called: Week1. 
 
 # Whenever you want to work on the documents related to Week1, start your work
-# by picking the project "Week1"
-# R-studio will keep track of all your work
+# by picking the project "Week1".
+# R-studio will keep track of all your work.
 # You will not get errors because you can't find your data or objects.
 
 
@@ -289,7 +293,7 @@ not_cancelled %>%
 ## Import data from Excel worksheet saved as cvs format
 ##-------------------------------------------------------
 
-# We will use __readr__ to import data 
+# We will use readr to import data 
 # https://cran.r-project.org/web/packages/readr/README.html
 
 ##---------
@@ -301,13 +305,13 @@ not_cancelled %>%
 
 # import data
 employee_salaries <- read_csv("employee_salaries.csv")
-# I downloaded the data set "employee_salaries.csv" from Open Data Philly website.
-# https://www.opendataphilly.org/dataset/employee-salaries-overtime 
+# I downloaded the data set "employee_salaries.csv" from Open Data Philly website:
+# https://www.opendataphilly.org/dataset/employee-salaries-overtime. 
 # It contains the salaries of the City employees. You should examine this data set, 
 # not just because we will use this data in this course. If you are interested in 
 # working for the City of Philadelphia, you can learn the structure of the City work force
 # including wages associated with particular jobs from this data. 
-# __read_csv()__ can import spreadsheets saved as column seperated format
+# read_csv() can import spreadsheets saved as column seperated format.
 
 ##----------
 ## Practice
@@ -324,7 +328,6 @@ employee_salaries <- read_csv("employee_salaries.csv")
 # 5. What is the job title of the highest paid city employee without overtime?
 
 # 6. What is the job title of the highest paid city employee with overtime?
-
 
 ##---------
 ## Answers:

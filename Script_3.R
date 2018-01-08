@@ -15,176 +15,305 @@ library(ggplot2)
 install.packages("ggthemes") # Install 
 library(ggthemes) 
 
+##-----------------------------------------
+## Bi-variate or multivariate covariations
+##-----------------------------------------
+
+# In the last script, we learn how to explore and display 
+# univarate distributions of categorical as well as continous variables.
+
+# But our analyses are rarely about univariate distributions.
+# Most of our work is about finding policy levers to bring about change. 
+# For instance, we will want to know whether the reduction in classroom size 
+# improve students' learning? Or does an increase in tax on soft drinks reduce
+# the consumption of soft drinks? 
+
+# These questions are about cauality. Finding causal relationships are very difficult. 
 
 ###-------------
 ### Discussion
 ###-------------
 
-### We will use data of college majors and job outcomes 
-### This data is used to write an article fivethirtyeight
-### https://github.com/fivethirtyeight/data/blob/master/college-majors/recent-grads.csv
-### Articles that use the data: https://fivethirtyeight.com/tag/college-majors/
+### What do we mean when we say something is a cause of another?
+### There are many books and articles written about this topic.
+### https://en.wikipedia.org/wiki/Causality
+### http://www.stat.columbia.edu/~gelman/research/published/causalreview4.pdf
 
+# Examining co-varations between variables is often the first step
+# toward answering those policy questions.  
 
+# When we examine co-variations, it is important to determine input-output, 
+# independent-dependent relationship between the variables,
+# and design the vitualization and analysis based on that determination. 
+
+##------------------------------------------
+## Co-variation between continous variables
+##------------------------------------------
+
+# When both dependent and independent variables are continuous/numeric variables,
+# scatterplot is the most common way to vitualize the covariation.
+# You can see covariation as a pattern in the points: `geom_point()`. 
+
+# For example, we can visualize the covariation between the representation of female
+# in a college major and the median income of that major
+# In this case, the unit of analysis is : college majors
+#               the input variable is   : Percent Female
+#               the output variable is  : Median Wage
+# Both of the variables are numeric/continous variables.
+
+# import the data from fivethirtyeight
 college_major <- read_csv("recent-grads.csv")
-str(college_major)
-View(college_major)
-
-##--------------------------
-## Univariate distribution
-##--------------------------
-
-# Univariate distribution of a categorical variable: Major_category
-# This will be our main input/independent variable for this analysis
 
 ggplot(data = college_major) +
-  geom_bar(mapping = aes(x = Major_category))
+  geom_point(mapping = aes(x = ShareWomen, y = Median)) 
 
-##-----------
-## Practice
-##-----------
+##-------
+## Bonus
+##-------
 
-## How would you describe this graph?
-
-# It is difficult to read the labels on the x-axis
-# So we will "flip" the graph 
+# We can improve the graph with better scales and labels for the axes by using
+# scale_x_continuous()
+# scale_y_continuous()
+?scale_x_continuous
+?scale_y_continuous
 ggplot(data = college_major) +
-  geom_bar(mapping = aes(x = Major_category)) +
-  coord_flip()
-
-# The height of the bars displays how many observations occurred with each x value. 
-# You can compute these values manually with `dplyr::count()`:
-
-college_major %>% count(Major_category)
-
-# Univariate distribution of a numeric variable: Median
-# This will be our main output/dependent variable
-
-# A variable is continuous if it can take any of an infinite set of ordered values. 
-# Numbers and date-times are two examples of continuous variables. 
-# To examine the distribution of a continuous variable, use a histogram:
-
-ggplot(data = college_major) +
-  geom_histogram(mapping = aes(x = Median, binwidth = 0.5))
-
-##-----------
-## Practice
-##-----------
-
-## How would you describe this graph?
-
-# A histogram divides the x-axis into equally spaced bins and 
-# then uses the height of a bar to display the number of observations 
-# that fall in each bin. 
-
-# You can set the width of the intervals in a histogram with the `binwidth` argument,
-# which is measured in the units of the `x` variable. 
-# You should always explore a variety of binwidths when working with histograms, 
-# as different binwidths can reveal different patterns. 
-
-# We can make it little more informative by adding more information
-# We know that Median is the median salary of college majors
-# We will use a package __scales__
-ggplot(data = college_major) +
-  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
-  scale_x_continuous(labels = scales::dollar)
-
-# You can compute this by hand by combining `dplyr::count()` 
-# and `ggplot2::cut_width()`:
-
-college_major %>% 
-  count(cut_width(Median, 0.5))
-
-# Now that you can visualise variation, what should you look for in your plots? 
-# And what type of follow-up questions should you ask? 
-
-# Typical values
-
-# 1. Which values are the most common? Why?
-# 2. Which values are rare? Why? Does that match your expectations?
-# 3. Can you see any unusual patterns? What might explain them?
-
-# Clusters of similar values suggest that subgroups exist in your data. To understand the subgroups, ask:
-# 1. How are the observations within each cluster similar to each other?
-# 2. How are the observations in separate clusters different from each other?
-# 3. How can you explain or describe the clusters?
-# 4. Why might the appearance of clusters be misleading?
-
-## Unusual values
-
-# Outliers are observations that are unusual; 
-# data points that don't seem to fit the pattern. 
-# Sometimes outliers are data entry errors; other times outliers suggest 
-# important new science. When you have a lot of data, outliers are 
-# sometimes difficult to see in a histogram.  
-
-ggplot(data = college_major) +
-  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
-  scale_x_continuous(labels = scales::dollar)
-
-# Note that there is one college major that paid more than $100,000
-
-##-----------
-## Practice
-##-----------
-
-## what is that major?
+  geom_point(mapping = aes(x = ShareWomen, y = Median)) +
+  scale_x_continuous(name = "Percent Female", labels = scales::percent) +
+  scale_y_continuous(name = "Median Wage", labels = scales::dollar)
 
 ##----------
+## Practice
+##----------
+
+## 1. Why ShareWomen is plotted on y-axis and Median on x-axis?
+
+## 2. In general, how do you decide which variable should be on which axis?
+
+##--------
+## Answer
+##--------
+
+## Output : dependent variable : y-axis
+## Input : independent variable : x-axis
+
+##--------------------------------------- 
+## Add more information into the graph
+##----------------------------------------
+ggplot(data = college_major) +
+  geom_point(mapping = aes(x = ShareWomen, y = Median, color = "green")) 
+# note: Inside of aes(): ggplot2 treats input as value in the data
+#       space and maps it to a value in the visual space.
+
+ggplot(college_major) + geom_point(aes(x = ShareWomen, y = Median), color = "green")
+# note: Outside of aes(): ggplot2 treats input as value in
+#       the visual space and sets the property to it.
+
+ggplot(college_major) + geom_point(aes(x = ShareWomen, y = Median, color = Major_category))
+# You can add third variable into the splot
+
+#---------
+# facets
+#---------
+
+# You can use facets to add third dimension to the graph.
+
+#
+# facet_grid() - 2D grid, rows ~ cols, . for no split
+# facet_wrap() - 1D ribbon wrapped into 2D
+#
+
+ggplot(data = college_major) + 
+  geom_point(mapping = aes(x = ShareWomen, y = Median)) + 
+  facet_wrap(~ Major_category, nrow = 2)
+
+
+##------------------
+## Regression lines
+##------------------
+
+# We can use geom_smooth to estimate regressions and display the model on a graph
+
+ggplot(data = college_major) + 
+  geom_smooth(mapping = aes(x = ShareWomen, y = Median))
+
+###-------------
+### Discussion
+###-------------
+
+### How can we describe the graph? 
+### Anything strange about this graph?
+
+ggplot(data = college_major) + 
+  geom_point(mapping = aes(x = ShareWomen, y = Median)) +
+  geom_smooth(mapping = aes(x = ShareWomen, y = Median))
+
+### How can we describe the graph? 
+### Anything strange about this graph?
+
+ggplot(data = college_major, mapping = aes(x = ShareWomen, y = Median)) + 
+  geom_point(mapping = aes(color = Major_category)) + 
+  geom_smooth()
+
+### How can we describe the graph? 
+### Anything strange about this graph?
+
+###------------
+### Discussion 
+###------------
+
+###-------------------------------- 
+### Note about global and local
+###--------------------------------
+###
+### Mappings (and data) that appear in ggplot() will apply globally to every layer
+### ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+###  geom_point() +
+###  geom_smooth()
+###
+### Mappings (and data) that appear in a geom_ function will add to or override the
+### global mappings for that layer only
+### ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+###  geom_point(mapping = aes(color = drv)) +
+###  geom_smooth()
+###
+### Automatically draws a single line for each group implied by color.
+### This occurs for other "monolithic" geoms as well.
+### ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+###  geom_point(mapping = aes(color = drv)) +
+###  geom_smooth(mapping = aes(color = drv), se = FALSE)
+
+##--------------------------------------------
+## adding a few more options for geom_smooth
+##--------------------------------------------
+
+ggplot(data = college_major, mapping = aes(x = ShareWomen, y = Median)) + 
+  geom_smooth(method = "gam", formula = y ~ s(x))
+
+ggplot(data = college_major, mapping = aes(x = ShareWomen, y = Median)) + 
+  geom_smooth(method = "lm")
+
+ggplot(data = college_major, mapping = aes(x = ShareWomen, y = Median)) + 
+  geom_smooth(method = "lm") +
+  geom_smooth(method = "gam", formula = y ~ s(x))
+
+###-------------
+### Discussion
+###-------------
+
+### lm is a Orginary Least Square regression
+### How can we describe the graph? 
+### Anything strange about this graph?
+### Compare this graph with previous graph
+### What do you see?
+
+##----------------------
+## update on template
+##----------------------
+
+# ggplot(data = <DATA>) +
+#   <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>),
+#                   stat = <STAT>) +
+#   <FACET_FUNCTION>
+
+##------------
+## Practice 
+##------------
+
+# 1. Show the covariation between the representation of female in a college major and 
+#    the unemployment rate of college graduates with that major
+
+# 2. Compare the two covariations: 
+#   (1) the representation of female in a college major and the median income and
+#   (2) the representation of female in a college major and the unemployment rate.
+#   What do you find?
+
+##---------
 ## Answer
 ##---------
-(data.frame(college_major$Major[college_major$Median > 100000]))
+
+# 1. Show the covariation between the representation of female in a college major and 
+#    the unemployment rate of college graduates with that major
+
+ggplot(data = college_major) +
+  geom_point(mapping = aes(x = ShareWomen, y = Unemployment_rate)) +
+  scale_x_continuous(name = "Percent Female", labels = scales::percent) +
+  scale_y_continuous(name = "Unemployment Rate", labels = scales::percent)
+
+# Scatterplots become less useful as the size of your dataset grows, because points begin to overplot, 
+# and pile up into areas of uniform black (as above).
+
+# As an example, we can analyze the Current Population Survey (CPS) data.
+# CPS is the offical data source for the US Bureau of Labor Statistics to 
+# monitor the conditions of the national labor force. 
+
+###-------------
+### Discussion
+###-------------
+
+### The best place to get data from the national surveys is: www.ipums.org
 
 
-# You can "zoom" into any part of the distribution by "filtering" the data
-low_wage_major <- college_major %>% 
-  filter(Median < 40000)
+# Load the data
+cps_small <- readRDS("cps_2017_small.rds")
 
-ggplot(data = low_wage_major) +
-  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
-  scale_x_continuous(labels = scales::dollar)
+ggplot(data = cps_small) +
+  geom_point(mapping = aes(x = Yrs_Schooling, y = Wage))
 
-# It's good practice to repeat your analysis with and without the outliers. 
-# If they have minimal effect on the results, and you can't figure out why they're there, 
-# it's reasonable to replace them with missing values, and move on. 
-# However, if they have a substantial effect on your results, you shouldn't drop them 
-# without justification. 
-# You'll need to figure out what caused them (e.g. a data entry error) and 
-# disclose that you removed them in your write-up.
+# One way to fix the problem: using the `alpha` aesthetic to add transparency.
+ggplot(data = cps_small) +
+  geom_point(mapping = aes(x = Yrs_Schooling, y = Wage), alpha = 1/100)
 
-## Missing values
 
-# You can replac the unusual values with missing values.
-# The easiest way to do this is to use `mutate()` to replace the variable
-# with a modified copy. You can use the `ifelse()` function to replace
-# unusual values with `NA`:
+# Another option is to bin one continuous variable so it acts like a categorical variable. 
+# You could bin `Yrs_Schooling` and then for each group, display a boxplot:
 
-college_major_no_outlier <- college_major %>% 
-  mutate(Median = ifelse(Median > 100000, NA, Median))
+ggplot(data = cps_small, mapping = aes(x = Yrs_Schooling, y = Wage)) + 
+  geom_boxplot(mapping = aes(group = cut_width(Yrs_Schooling, 0.1))) +
+  scale_x_continuous(name = "Years of Schooling") + 
+  scale_y_continuous(name = "Wage", labels = scales::dollar)
 
-# ifelse() has three arguments. 
-#  First argument: `test` should be a logical vector. 
-#  The result will contain the value of the second argument, `yes`, 
-#  when `test` is `TRUE`, and the value of the third argument, `no`, 
-#  when it is false.
+# You can also control the bin based on our knowledge about the years of education.
+# Let's group the years of education into:
+#  1. Less than HS (<HS)
+#  2. High School (HS)
+#  3. Some College (Some College)
+#  4. BS (BS)
+#  5. Graduate school (Grad)
+cps_small <- cps_small %>% 
+  drop_na(Yrs_Schooling) %>%
+  mutate(Degree=cut(Yrs_Schooling, breaks=c(-Inf, 11, 12, 15, 16, 20), 
+                    labels=c("<HS","HS","Some College", "BS", "Grad")))
 
-ggplot(data = college_major_no_outlier) +
-  geom_histogram(mapping = aes(x = Median, binwidth = 0.5)) +
-  scale_x_continuous(labels = scales::dollar)
+ggplot(data = cps_small, mapping = aes(x = Degree, y = Wage)) + 
+  geom_boxplot() +
+  scale_x_discrete(name = "Education") + 
+  scale_y_continuous(name = "Wage", labels = scales::dollar)
 
-##---------------------------------------
-## Bi-variate or covariate distributions
-##---------------------------------------
+# remove the outliers and zoom in and see the relationship better
+ggplot(data = cps_small, mapping = aes(x = Degree, y = Wage)) + 
+  geom_boxplot(outlier.shape = NA) +
+  scale_x_discrete(name = "Education") + 
+  scale_y_continuous(name = "Wage", labels = scales::dollar, limits = c(0, 200000) )
 
-##----------------------------------------
-## Categorical vs. continuous variable 
-##----------------------------------------
+##----------------------------------------------------------------------
+## Covariation between a categorical variable and a continuous variable 
+##----------------------------------------------------------------------
 
 # It's common to want to explore the distribution of a continuous variable broken down 
-# by a categorical variable
+# by a categorical variable.
 
 # In this case, categorical variable is input/independent variable
 #               continous variable is output/dependent variable
+
+###------------
+### Discussion
+###------------
+
+### What should we do when the input variable is continous and the output variable
+### is categorical?
+
+# We will use a data set, mpg, that comes with ggplot package.
+?mpg
 
 # You can use density to compare the distributions of continuous variable across categories
 ggplot(mpg) +
@@ -245,10 +374,34 @@ ggplot(data = college_major) +
 # You can see the power of R 
 
 
-##--------------------------------
-## Categorical vs. by categorical
-##--------------------------------
+##---------------------------------
+## Both variables are categorical 
+##---------------------------------
 
+# When both input/independent variable and output/dependent variable are categorical,
+# you'll need to count the number of observations for each combination. 
+# One way to do that is to rely on the built-in `geom_count()`:
+
+ggplot(data = mpg) +
+  geom_count(mapping = aes(x = class, y = drv))
+
+# The size of each circle in the plot displays how many observations 
+# occurred at each combination of values. 
+# Covariation will appear as a strong correlation between specific x values and specific y values. 
+
+# Another approach is to compute the count with dplyr:
+
+mpg %>% 
+  count(class, drv)
+
+# Then visualise with `geom_tile()` and the fill aesthetic:
+
+mpg %>% 
+  count(class, drv) %>%  
+  ggplot(mapping = aes(x = class, y = drv)) +
+  geom_tile(mapping = aes(fill = n))
+
+# Or we can use a stacked bar graph
 ggplot(data = mpg) + 
   geom_bar(mapping = aes(x = class, fill = trans))
 
@@ -262,8 +415,6 @@ ggplot(data = mpg) +
 
 ggplot(data = mpg) + 
   geom_bar(mapping = aes(x = class, fill = trans), position = "fill")
-
-
 
 ###------------
 ### Discussion 

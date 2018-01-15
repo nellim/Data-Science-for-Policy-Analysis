@@ -348,12 +348,14 @@ na_count <-sapply(employee_salaries, function(y) sum(length(which(is.na(y)))))
 (na_count <- data.frame(na_count))
 # Note that there are 12 missing data for "title" or "annual_salary"
 
-# 1. How many city employees in the data?
+# 1. How many observations are in the data set?
 # Base R
 length(employee_salaries$objectid)
 
 # with pipe and tidyverse
 employee_salaries %>% summarise(Count = n())
+
+
 
 # 2. How many employees the city of Philadelphia has in 2017?
 # Do you notice that the data is quarterly for each calendar year?
@@ -368,6 +370,16 @@ employee_salaries %>%
   group_by(calendar_year, quarter) %>% 
   summarise(Count = n())
 
+# we may want to know how many unique individuals have worked for the
+# city of Philadelphia in the first three quarters of 2017
+
+# start with combining two variables: first name and last name into full name
+employee_salaries$full_name <- paste(employee_salaries$first_name,
+                                     employee_salaries$last_name)
+length(unique(employee_salaries$full_name[employee_salaries$calendar_year==2017]))
+
+
+
 # 3. What is the highest annual salary of a city employee without overtime?
 # Base R
 max(employee_salaries$annual_salary, na.rm = TRUE)
@@ -375,6 +387,8 @@ max(employee_salaries$annual_salary, na.rm = TRUE)
 # with pipe and tidyverse
 employee_salaries %>% 
   summarise(max(annual_salary, na.rm = TRUE))
+
+
 
 # 4. What is the highest salary of a city employee including overtime?
 # By computing answer to Question #3, we know that there is an employee
@@ -400,15 +414,24 @@ employee_salaries <- employee_salaries %>%
 # answer the question
 max(employee_salaries$total_salary)
 
+
+
+
 # 5. What is the job title of the highest paid city employee without overtime?
 employee_salaries$title[employee_salaries$annual_salary==max(employee_salaries$annual_salary)]
 
 unique(employee_salaries$title[employee_salaries$annual_salary==max(employee_salaries$annual_salary)])
 
+
+
+
 # 6. What is the job title of the highest paid city employee with overtime?
 employee_salaries$title[employee_salaries$total_salary==max(employee_salaries$total_salary)]
 
 unique(employee_salaries$title[employee_salaries$total_salary==max(employee_salaries$total_salary)])
+
+
+
 
 ##---------------------
 ## Additional practice

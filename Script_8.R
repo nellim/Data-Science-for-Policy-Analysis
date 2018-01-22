@@ -1,238 +1,215 @@
 ##---------------------------------------------------------
 ## Script # 8
+## Based on Chapter 15 and 28 of r4ds
 ## Learning objectives:
-##  1. estimate OLS regression models
-##  2. Use ggplot2 to make graphs from your data 
-##--------------------------------------------------------
-
+##   2. Learn more features of ggplot
+##-----------------------------------------------------------
 
 ###-------------
 ### Discussion
 ###-------------
 
-### There are a few national surveys that the Census Bureau and the Bureau of Labor Statistics
-### collect and use to monitor the changes in the country
-### Good to be familiar with these data sources. Since many governmental agencies 
-### and non-profit organizations use these data 
+### Guidelines for good graphic:
+### 1. Aim for high data density.
+### 2. Use clear, meaningful labels.
+### 3. Provide useful references.
+### 4. Highlight interesting aspects of the data.
+### 5. Consider using small multiples.
+### 6. Make order meaningful.
 
-### The best place to learn these data sources is www.ipums.org
-### There are few packages to help you use Census data: 
-###   1. __tidycensus__: https://github.com/walkerke/tidycensus
-###   2. __ipumsr__: https://cran.r-project.org/web/packages/ipumsr/vignettes/ipums.html
+### Here is a link with examples and explanations:
+### https://bookdown.org/rdpeng/RProgDA/customizing-ggplot2-plots.html 
+
+##--------------------------
+## More features of  ggplot
+##--------------------------
+
+#------------------------
+# General Social Survey
+#------------------------
+
+# We will use Genearal Social Survey (GSS) that we used in Script 6
+# You can get more information about GSS: http://gss.norc.org/ 
+
+# bring the data
+library(readstata13) # to read stata data file saved in version 13
+gss <- read.dta13("gss_conlegis.dta")
+
+gss <- gss %>% 
+  droplevels() # drop levels in the data frame that unused
+# this makes your plots clean and tidy
+# you can also use fct_drop() from __forcats__
+
+# using str (compact display of the structure) function to examine objects
+str(gss)
+View(gss)
+summary(gss)
+
+# In this example, we will analyze how much confidence Americans have in Congress.
+# We want to know how their confidence has changed over the years. And we want to know
+# whether the confidence in Congress varies across race and sex.
+
+# Now we learn how to display these results using R
+# We will start with looking at the trends for all Americans
+
+# first we need to compute the percentages for each category of
+# the outcome variable: confidence in congress
+mytable <- xtabs(~ year+conlegis, data=gss) # two-way table
+mytable <- prop.table(mytable, 1) # row proportions
+mydata <- data.frame(mytable) # transform the matrix into a dataframe
+
+head(mydata)
+
+mydata$Percent <- mydata$Freq # preparing % for Y-axis
+mydata$Percent <- mydata$Percent*100
+mydata$year <- as.character(mydata$year)
+mydata$year <- as.numeric(mydata$year)
+
+# basic line graph
+plot1 <- ggplot(data = mydata, aes(x=year, y=Percent, linetype=conlegis)) +
+  geom_line()
+plot1
+# take control of x and y 
+plot2 <- plot1 + scale_x_continuous(breaks=seq(1973, 2014, 4)) +  
+  scale_y_continuous(breaks=seq(0, 70, 5)) 
+plot2
+# Add labels
+plot3 <- plot2 + labs(title="Confidence in Congress", x="Year", y="%", 
+                      fill = "Levels")
+plot3
+# Add annotations
+plot4 <- plot3 + annotate("text", x=1975, y=35, label="Watergate", colour="red") +
+  annotate("text", x=1998, y=20, label="Clinton Impeachment", colour="blue") +
+  annotate("text", x=2001, y=47, label="Republican Control", colour="red")
+plot4
+# Shaded rectangular box
+plot5 <- plot4 + annotate("rect", xmin=1995, xmax=2007, ymin=0, ymax=70, alpha=.1,
+                          fill="red")
+plot5
+# remove background using theme
+plot6 <- plot5 + theme_bw() 
+plot6
+# remove grid lines
+plot7 <- plot6 + theme_bw() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+plot7
+# Change Legend title
+plot8 <- plot7 + labs(linetype='Levels')
+plot8
+
+# Now we will look at the outcomes by racial groups
+# computing percentages to plot
+mytable2 <- xtabs(~ year+race+conlegis, data=gss)
+mytable2 <- ftable(prop.table(mytable2, c(1,2)))
+mydata2 <- data.frame(mytable2)
+library(dplyr) # make sure you install the package
+# subset only those who have "hardly any confidence" in congress
+mydata2 <- data.frame(mydata2 %>% filter(conlegis == "hardly any"))
+mydata2$Percent <- mydata2$Freq
+mydata2$Percent <- mydata2$Percent*100
+mydata2$year <- as.character(mydata2$year)
+mydata2$year <- as.numeric(mydata2$year)
+View(mydata2)
+plot9 <- ggplot(data = mydata2, aes(x=year, y=Percent, linetype=race)) +
+  geom_line()
+plot9
+plot10 <- plot9 + scale_x_continuous(breaks=seq(1973, 2014, 4)) +  
+  scale_y_continuous(breaks=seq(0, 70, 5)) 
+plot10
+plot11 <- plot10 + labs(title="Percent of Americans Who Had Hardly Any Confidence \nin Congress by Race", x="Year", y="%", 
+                        fill = "Race")
+plot11
+plot12 <- plot11 + annotate("text", x=1975, y=35, label="Watergate", colour="red") +
+  annotate("text", x=1998, y=20, label="Clinton Impeachment", colour="blue") +
+  annotate("text", x=2001, y=47, label="Republican Control", colour="red")
+plot12
+plot13 <- plot12 + annotate("rect", xmin=1995, xmax=2007, ymin=0, ymax=70, alpha=.1,
+                            fill="red")
+plot13
+plot14 <- plot13 + theme_bw() 
+plot14
+plot15 <- plot14 + theme_bw() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+plot15
+plot16 <- plot15 + labs(linetype='Race')
+plot16
+
+
+##--------
+## Bonus
+##--------
 
 library(tidyverse)
-library(ggplot2)
-library(readstata13) # to read stata data file saved in version 13
+# Subset the data for 2014?
+gss2014 <- gss %>% 
+  filter(year==2014) # subset GSS data for year == 2014
 
-# bring in the data 
-acs <- read.dta13("acsphillylaborforce.dta")
-names(acs)
+# now we look at outcomes in 2014 by racial groups
+# mosaic plots are useful to see the relationships among categorical variables
+library(vcd)
+mosaic( ~ race + conlegis, data=gss2014, highlighting="conlegis",
+        highlighting_fill=c("lightblue","pink","red"))
+gss$conlegis <- factor(gss$conlegis, 
+                        labels = c("Great Deal","Only Some", "Hardly Any"))
+table(gss2014$race)
+gss2014$race <- factor(gss2014$race, 
+                       labels = c("W", "B", "O")) 
+mosaic( ~ sex + race + conlegis, data=gss2014, highlighting="conlegis",
+        highlighting_fill=c("lightblue","pink","red"),
+        direction=c("h","h","v"))
 
 
-###################
-# Data management #
-###################
+# we can use a more traditional plot: bar graph to display the same information
+mytable3 <- xtabs(~ race+conlegis, data=gss2014)
+mytable3
+mytable3 <- prop.table(mytable3, 1) # row proportions
+mydata3 <- data.frame(mytable3)
+mydata3$Percent <- mydata3$Freq
+mydata3$Percent <- round(mydata3$Percent*100, digits=1)
+mydata3a <- mydata3 %>% 
+  group_by(race) %>% 
+  mutate(label_y=cumsum(Percent))
+plot17 <- ggplot(mydata3a, aes(x=race, y=Percent, fill=conlegis)) + 
+  geom_bar(stat = "identity") +
+  geom_text(aes(y=label_y,label=paste(Percent,"%"), vjust=1.5))
+plot18 <- plot17 + theme_bw() + labs(fill="Levels")
+plot18 
 
-# create duplicate variables with new names 
-# for better graphic and summary tables
-acs <- acs %>% 
-  rename(
-    Race = raceth,
-    Sex  = sex,
-    Education = educ_year,
-    Degree = education,
-    Occupation = gen_occ,
-    Industry = ind_cat5,
-    Income = incwage,
-    Managers = leader_cat,
-    Age = age,
-    College_major = major1,
-    Marital_status = marst
-  ) %>% 
-  mutate(
-    Age = as.numeric(Age)
-  )
 
-# you can add more documentation into your data by using labels
-library(Hmisc)
-# Hmisc is an old package that contains may useful functions
-# http://data.vanderbilt.edu/fh/R/Hmisc/examples.nb.html 
-# http://biostat.mc.vanderbilt.edu/wiki/Main/Hmisc 
-label(acs$Income) <-  "Income from wages"
-label(acs$Income) <- "Income from wages"
-label(acs$Education) <- "Years of schooling"
-label(acs$Managers) <- "Managerial Positions"
-label(acs$Occupation) <- "Major Occupational Categories"
-label(acs$Industry) <- "Major Industrial Categories"
+##----------------------------
+## 3-dimensional covariation
+##----------------------------
 
-# drop observations with no income
+# we will look at differences across race AND sex
 
-###-------------
-### Discussion
-###-------------
+# dot plots
+gss2014 <- gss2014 %>% 
+  mutate(race_sex = paste(race, sex, sep = ' '))
 
-### many data set assign some values for missing data
-### it is important to know your data
-acs <- subset(acs, Income > 0 & Income < 999998)
+gss2014$race_sex <- gss2014$race_sex %>% 
+  fct_relevel("white female", "white male", "black female", "black male", "other female", "other male")
 
-###########
-# Outcome #
-###########
-#look at our outcome variable: income from wages
-summary(acs$Income)
-
-# select some explanatory variables 
-myvars <- c("Sex", "Race", "Age", "Education", "Occupation", "Industry")
-# note how we use sapply to repeatedly apply the same operation on
-# all variables in myvars
-sapply(acs[myvars], summary)
-# notice that something is wrong with age
-acs$Age <- as.numeric(acs$Age)
-summary(acs$Age)
-
-####################
-# comparing groups #
-####################
-# income difference between males and females
-# use aggregate to compute average incomes by sex
-# note that we exclude missing values in the calculation
-aggregate(acs$Income, list(Sex = acs$Sex), mean)
-# alternatively we can compute the same statistics with this code
-# I like this second option, because it explicitly states which is
-# the dependent variable and which is independent variable
-# in this case Income is the dependent variable, Sex, the independent variable
-mytable1 <- acs %>% 
-  group_by(Sex) %>% 
-  summarise(count = n(), 
-            MeanIncome = mean(Income, na.rm = TRUE))
-
-# use a package called plyr to rename the variable (Income)
-# to (MeanIncome) to make the results more informative
-mytable1 <- acs %>% 
-  group_by(Sex) %>% 
-  summarise(count = n(), 
-            MeanIncome = mean(Income, na.rm = TRUE))
-
-mytable1$diff <- mytable2$MeanIncome - mytable2$MeanIncome[1]
-mytable1$diff_percent <- (mytable2$diff/mytable2$MeanIncome[1])*100
-mytable1
+mytable4 <- xtabs(~ race_sex+conlegis, data=gss2014)
+mytable4
+mytable4 <- prop.table(mytable4, 1) # row proportions
+mydata4 <- data.frame(mytable4)
+mydata4$Levels <- mydata4$conlegis
+mydata4$Percent <- mydata4$Freq
+mydata4$Percent <- round(mydata4$Percent*100, digits=1)
+ggplot(mydata4, aes(x=Percent, y=race_sex)) + 
+  labs(title="Confidence in Congress by Race and Sex", x="Percent", y="Race and Sex") +
+  scale_x_continuous(breaks=seq(0, 70, 10)) +
+  geom_point(size=3, aes(colour=Levels)) 
 
 ##-----------
 ## Practice
 ##-----------
 
-# 1. Vitualize the gender differences in income
+# 1. How would you explain the graph?
 
-##---------
-## Answer
-##---------
-
-# 1. Vitualize the gender differences in income
-
-# some graphical options for the income differences by gender
-# this use the aggregate data computed above
-ggplot(mytable1, aes(x=Sex, y=MeanIncome)) +
-  geom_bar(stat="identity", width=0.5)
-
-# the following options use ggplot2 to compute the statistics
-ggplot(data = acs) +
-  stat_summary_bin(
-    mapping = aes(x = Sex, y = Income), 
-    fun.y = "mean", 
-    geom = "bar"
-    ) 
-
-ggplot(data = acs) +
-  stat_summary(
-    mapping = aes(x = Sex, y = Income),
-    fun.ymin = min,
-    fun.ymax = max,
-    fun.y = "mean"
-  )
-
-ggplot(data = acs,
-       mapping = aes(x = Sex, y = Income)) +
-  geom_boxplot()
-
-# change set up option
-options(scipen = 100000) # remove the scientific notation
-#options(scipen = 0) # restore default
-
-ggplot(data = acs,
-       mapping = aes(x = Sex, y = Income)) +
-  geom_boxplot()
-
-#-----------------
-# Bonus options
-#-----------------
-
-# Calculation of mean and sd of each group 
-# This time we are going to display means and Standard Deviations for each group
-Sex_diff <- acs %>% 
-  group_by(Sex) %>% 
-  summarise(count = n(), 
-            Mean_Income = mean(Income, na.rm = TRUE),
-            Std_Div = sd(Income, na.rm = TRUE))
-
-# Make the plot
-ggplot(Sex_diff) + 
-  geom_point(aes(x=Sex , y=Mean_Income), color="red", size = 3) +
-  geom_errorbar(data = Sex_diff, aes(x = Sex, y = Std_Div, ymin = Mean_Income - Std_Div, 
-                                     ymax = Mean_Income + Std_Div), width=0.10)
+# 2. Can you say that the racial differences in the confidence in Congress vary across gender?
 
 
-# Regression is just a pivot table
-fit <- lm(Income ~ Sex, data=acs)
-summary(fit)
-mytable1
-
-fit <- lm(log(Income) ~ Sex, data=acs)
-summary(fit)
-mytable1
-
-
-##----------
-## Practice  
-##----------
-
-# 1. Compute the income differences across racial and ethnic
-#     groups in Philly
-# 2. Which group has the highest average income in Philly?
-# 3. Which group has the lowest average income in Philly?
-# 4. Produce the graphical display of racial income differences
-#    in Philly?
-# 5. Estimate the regression model that summarizes
-#    racial differences in income in Philly?
-
-##----------
-## Answer  
-##----------
-
-# Income differencs among racial and ethnic groups
-mytable2 <- aggregate(Income~Race,data=acs,FUN = mean, na.rm = TRUE)
-mytable2 <- plyr::rename(mytable2, c("Income"="MeanIncome"))
-mytable2$diff <- mytable2$MeanIncome - mytable2$MeanIncome[1]
-mytable2$diff_percent <- (mytable2$diff/mytable2$MeanIncome[1])*100
-mytable2
-
-# Question #4: Produce the graphical display of racial income differences
-# in Philly?
-ggplot(mytable2, aes(x=Race, y=MeanIncome)) +
-       geom_bar(stat="identity")
-
-options(scipen = 0) # restore default
-ggplot(acs, aes(x=Race, y=Income)) + geom_boxplot() + 
-  scale_y_continuous(breaks=seq(0, max(acs$Income), 40000))
-
-# Question #5: Estimate the regression model that summarizes
-# racial differences in income in Philly?
-
-# Regression is just a pivot table
-fit2 <- lm(Income ~ as.factor(Race), data=acs)
-summary(fit2)
-mytable2
-
-fit2 <- lm(log(Income) ~ as.factor(Race), data=acs)
-summary(fit2)
-mytable2
 

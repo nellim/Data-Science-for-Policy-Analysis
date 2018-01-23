@@ -4,7 +4,7 @@
 ## Learning objectives:
 ##   1. Learn to how to ggplot2
 ##   2. Learn to conduct EDA/descriptive analysis
-## Version: 01/06/2018
+## Version: 01/15/2018
 ##-------------------------------------------------
 
 ##-----------
@@ -16,22 +16,26 @@ library(readr)
 
 # The most likely data analysis that you will do at your work is
 # exploratory data analysis (EDA). EDA is more art than science.
-# The deep understanding of mathematical statistics or econometric 
-# is not as important as intuitive and contextual knowledge about your data.
+# The deep understanding of mathematical statistics or econometrics 
+# is not as important for EDA as intuitive and contextual knowledge 
+# about your data.
 
 # The application of EDA can start with a question from your boss about 
 # the data. Or you may generate questions from observing the data.
-# You will search for answers by visualising, transforming, and modelling your data.
+# You will search for answers by visualising, transforming, and modelling 
+# your data.
+
 # As you learn more about the data, you will refine your questions 
-# and/or generate new questions. At the end, the objective of your effort is
-# to uncover a hidden structure of the data and communicate the findings to
-# the decision makers, internal and external stakeholders. 
+# and/or generate new questions. At the end, the objective of your 
+# effort is to uncover a hidden structure of the data and communicate 
+# the findings to the decision makers, internal and external stakeholders. 
 
 # Two questions usually guide your EDA:
-# 1. What type of variation occurs within your variables? Technically, this question
-# is about univarate distribution of the variables. 
-# 2. What type of covariation occurs between your variables? This question is about
-# bi- or multivarate associations among the variables. 
+# 1. What type of variation occurs within your variables? Technically, 
+# this question is about univarate distribution of the variables. 
+# 2. What type of covariation occurs between your variables? 
+# This question is about bi- or multivarate associations among the 
+# variables. 
 
 # Some definitions for our discussion
 # 1. Variable     : a quantity, quality, or property that you can measure. 
@@ -83,24 +87,28 @@ employee_salaries <- read_csv("employee_salaries.csv")
 
 # Your data analysis often begins with examining the distribution of your variables.
 
+#------------
 # Variation
+#------------
 
 # Variation is the tendency of the values of a variable to change from 
-# measurement to measurement. Every variable has its own pattern of variation, 
-# which can reveal interesting information. 
+# measurement to measurement. Every variable has its own pattern of 
+# variation, which can reveal interesting information. 
 
-# The best way to understand that pattern is to visualise the distribution of 
-# the variable's values.
+# The best way to understand that pattern is to visualise the distribution 
+# of the variable's values.
 
 ##-----------------------------
 ## Categorical or Continuous 
 ##-----------------------------
 
-# How you visualise the distribution of a variable will depend on whether the variable
-# is categorical or continuous. 
+# How you visualise the distribution of a variable will depend on 
+# whether the variable is categorical or continuous. 
 
-# A variable is categorical if it can only take one of a small set of values. 
-# In R, categorical variables are usually saved as factors or character vectors. 
+# A variable is categorical if it can only take one of a small set of 
+# values. 
+# In R, categorical variables are usually saved as factors or character 
+# vectors. 
 # To examine the distribution of a categorical variable, use a bar chart:
 
 ##--------------------------------------
@@ -176,7 +184,8 @@ college_major <- read_csv("recent-grads.csv")
 str(college_major)
 View(college_major)
 
-# As before we will concentrate on variation of a categorical variable: Major_category.
+# As before we will concentrate on variation of a categorical variable: 
+# Major_category.
 
 ##-----------
 ## Practice 

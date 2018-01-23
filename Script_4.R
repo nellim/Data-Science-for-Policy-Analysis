@@ -18,7 +18,7 @@ library(ggplot2)
 ##---------------------
 
 # You rarely will get data that are ready to be analyzed.
-# You will have to wrangle it before you can analyze it
+# You will have to wrangle (or transform) it before you can analyze it
 
 # We will use the dplyr package to manage our data
 
@@ -39,12 +39,12 @@ str(flights)
 View(flights)
 ?flights
 
-# Row of three (or four) letter abbreviations under the column names. 
+# When you execute a command str(<data frame>), R will list the variables and
+# you will see: row of three (or four) letter abbreviations under the column names. 
 # `int` stands for integers.
 # `dbl` stands for doubles, or real numbers.
 # `chr` stands for character vectors, or strings.
 # `dttm` stands for date-times (a date + a time).
-
 # `lgl` stands for logical, vectors that contain only `TRUE` or `FALSE`.
 # `fctr` stands for factors
 # `date` stands for dates.
@@ -82,7 +82,7 @@ View(flights)
 ## Filter rows with `filter()`
 ##-----------------------------
 
-# it is simple: you use __filter__ to select/subset observations
+# it is simple: you use filter to select/subset observations
 filter(flights, month == 1, day == 1)
 
 # you can save the data that you filtered/selected/subseted
@@ -101,9 +101,12 @@ jan1 <- filter(flights, month == 1, day == 1)
 
 filter(flights, month = 1)
 
+##----------------------------
+## How computer views numbers
+##----------------------------
+
 # Another common problem when you use `==` with floating point numbers 
 # It is a bit technical but common problem
-
 sqrt(2) ^ 2 == 2
 # You see that R is tell you that these two numbers not the same
 # similarly,
@@ -114,12 +117,12 @@ sqrt(2) ^ 2 == 2
 near(sqrt(2) ^ 2,  2)
 near(1 / 49 * 49, 1)
 
-# When you use the function __near__, R will tell you that these numbers are "near"
+# When you use the function near, R will tell you that these numbers are "near"
 # Let's learn more about this function
 ?near
 
-# From now on, if you need to compare two numbers, use __near__. 
-# It is safer than using __==__ to compare two numbers in R. 
+# From now on, if you need to compare two numbers, use near. 
+# It is safer than using == to compare two numbers in R. 
 
 ##-------------------
 ## Logical operators
@@ -150,8 +153,8 @@ filter(flights, arr_delay <= 120, dep_delay <= 120)
 ### Discussion
 ###-------------
 
-# Whenever you start using complicated, multipart expressions in 
-# `filter()`, consider making them explicit variables instead. 
+### Whenever you start using complicated, multipart expressions in 
+### `filter()`, consider making them explicit variables instead. 
 
 ##----------------
 ## Missing values
@@ -213,7 +216,8 @@ filter(employee_salaries, department=="MAYOR'S OFFICE" & calendar_year == 2017 &
 
 # 4. Select the City employees in the Mayor's office or the City Council
 filter(employee_salaries, department=="MAYOR'S OFFICE" | department=="CITY COUNCIL")
-
+# alternatively, we can use %in%
+filter(employee_salaries, department %in% c("MAYOR'S OFFICE", "CITY COUNCIL"))
 
 ##-----------------------------
 ## Arrange rows with `arrange()`
@@ -406,3 +410,10 @@ employee_salaries %>%
   ggplot(aes(x = log_total_salary)) + 
   geom_histogram() +
   scale_x_continuous(limits = c(9, 13)) 
+
+###-------------
+### Discussion
+###-------------
+
+### log_total_salary is closer to normal distribution. But long($) is a unit
+### of measurement that most deision makers and stakeholders cannot understand
